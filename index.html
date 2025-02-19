@@ -364,7 +364,10 @@
               playlistContainer.scrollTop + (liOffsetFromContainerTop - 2 * liHeight);
 
             // 0보다 작아지면 그냥 0으로 처리(플레이리스트 최상단)
-            playlistContainer.scrollTop = Math.max(desiredScrollTop, 0);
+playlistContainer.scrollTo({
+  top: Math.max(desiredScrollTop, 0),
+  behavior: 'smooth'
+});
 
           }
         }
