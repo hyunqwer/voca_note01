@@ -43,10 +43,12 @@
 
     /* 제목 스타일 */
     .title {
-      font-size: 23px;
-      font-weight: bold;
-      color: #696969;
-      margin-bottom: 12px;
+  white-space: nowrap;
+  font-weight: bold;
+  color: #696969;
+  margin-bottom: 12px;
+  /* 화면 크기에 따라 자동으로 폰트 크기를 조절 (16px ~ 23px 사이) */
+  font-size: clamp(16px, 5vw, 22px);
     }
 
     #currentTrack {
