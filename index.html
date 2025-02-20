@@ -1,142 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>윤선생 어휘노트 음원 플레이어 (업그레이드)</title>
   <style>
-    /* 폰트 임포트: 필요에 따라 다른 폰트로 교체 가능 */
-    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap'); 
-    
-    /* 전역 스타일 */
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
     html, body {
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      /* 그라데이션은 그대로 유지하되, 화면 전체가 하나의 영역으로 자연스럽게 이어지도록 설정 */
-      background: linear-gradient(45deg, #FFC2C2, #FFE7C2);
-      background-attachment: fixed;  /* 스크롤해도 그라데이션이 고정되도록 */
-      background-repeat: no-repeat;
-      background-size: cover;        /* 화면을 가득 채우도록 설정 */
+      margin: 0; padding: 0;
+      background: linear-gradient(45deg, #FFC2C2, #FFE7C2) fixed no-repeat;
+      background-size: cover;
       font-family: 'Nanum Gothic', Arial, sans-serif;
-      /* 상단 위치 고정을 위해 flex 레이아웃은 제거/수정 */
-      display: block;
     }
-
-    /* 헤더 및 로고 */
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;
     }
-
-    .header img {
-      width: 70px;
-    }
-
-    /* 제목 스타일 */
+    .header img { width: 70px; }
     .title {
-  white-space: nowrap;
-  font-weight: bold;
-  color: #696969;
-  margin-bottom: 12px;
-  /* 화면 크기에 따라 자동으로 폰트 크기를 조절 (16px ~ 23px 사이) */
-  font-size: clamp(16px, 5vw, 22px);
+      white-space: nowrap; font-weight: bold; color: #696969; margin-bottom: 12px;
+      font-size: clamp(16px, 5vw, 22px);
     }
-
     #currentTrack {
-      font-weight: bold;
-      color: #49BBBD;
-      margin-bottom: 10px;
-      transition: color 0.3s ease;
+      font-weight: bold; color: #49BBBD; margin-bottom: 10px; transition: color 0.3s ease;
     }
-
-    /* 오디오 플레이어 컨테이너 */
     .audio_container {
-      width: 90%;
-      max-width: 400px;
+      width: 90%; max-width: 400px;
       background-color: rgba(255, 255, 255, 0.6);
-      border-radius: 20px;
-      padding: 40px 20px;
-      text-align: center;
+      border-radius: 20px; padding: 40px 20px; text-align: center;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-      /* 상단 고정을 위해 margin-top 추가, 가로 중앙 정렬은 auto */
       margin: 20px auto;
     }
-
-    /* 오디오 스타일 */
     audio {
-      width: 90%;
-      max-width: 460px;
-      display: block;
-      margin: 10px auto;
+      width: 90%; max-width: 460px; display: block; margin: 10px auto;
     }
-
-    /* 플레이리스트 영역 */
     .playlist {
-      width: 85%;
-      max-height: 375px; /* 적절히 조절 가능 */
-      overflow-y: auto;
-      margin: 20px auto 0;
-      padding: 10px;
+      width: 85%; max-height: 375px; overflow-y: auto;
+      margin: 20px auto 0; padding: 10px;
       background: rgba(255, 255, 255, 0.8);
       border-radius: 10px;
       box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
     }
-
-    .playlist ul {
-      padding: 0;
-      margin: 0;
-    }
-
+    .playlist ul { padding: 0; margin: 0; }
     .playlist li {
-      list-style: none;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      cursor: pointer;
-      font-size: 15px;
-      color: #7C7C7C;
-      display: flex;
-      justify-content: space-between;
+      list-style: none; padding: 10px; border-bottom: 1px solid #ddd; cursor: pointer;
+      font-size: 15px; color: #7C7C7C; display: flex; justify-content: space-between;
       transition: background 0.2s ease;
     }
-
-    .playlist li:hover {
-      background: rgba(240, 240, 240, 0.8);
-    }
-
-    .playlist li.active {
-      background: rgba(13, 120, 122, 0.8);
-      color: white;
-      font-weight: bold;
-    }
-
-    /* 드롭다운 스타일 */
+    .playlist li:hover { background: rgba(240, 240, 240, 0.8); }
+    .playlist li.active { background: rgba(13, 120, 122, 0.8); color: white; font-weight: bold; }
     select#folderSelect {
-      width: 100%;
-      max-width: 200px;
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #4a4a4a;
-      background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      width: 100%; max-width: 200px; padding: 10px; font-size: 16px; font-weight: bold; color: #4a4a4a;
+      background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;
       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-      appearance: none;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
+      appearance: none; cursor: pointer; transition: all 0.3s ease-in-out;
     }
-
-    select#folderSelect:hover,
-    select#folderSelect:focus {
-      border-color: #49BBBD;
-      box-shadow: 0px 0px 8px rgba(73, 187, 189, 0.5);
-      outline: none;
+    select#folderSelect:hover, select#folderSelect:focus {
+      border-color: #49BBBD; box-shadow: 0px 0px 8px rgba(73, 187, 189, 0.5); outline: none;
     }
   </style>
 </head>
@@ -166,154 +85,220 @@
   <script>
     'use strict';
 
+    // -----------------------------------
+    // [1] 범용 유틸 함수
+    // -----------------------------------
+    /**
+     * @description 예: step=10 이면 (1~10, 11~20, …) 형태로 묶어주는 함수
+     * @param {number} start - 시작 숫자
+     * @param {number} end - 끝 숫자(포함)
+     * @param {number} step - 구간 폭
+     * @param {boolean} mergeLast - 마지막 잔여분이 step보다 작아도 이전 구간에 합칠지 여부
+     * @returns {string[]} 예) ["1~10", "11~20", …]
+     */
+    function makeRanges(start, end, step, mergeLast = false) {
+      const result = [];
+      let current = start;
+
+      while (current <= end) {
+        const chunkStart = current;
+        let chunkEnd = current + step - 1;
+        if (chunkEnd > end) {
+          chunkEnd = end;
+        }
+        // 마지막 구간이 step보다 작고 mergeLast=true 이면 이전 구간과 합침
+        // (예: 951~960, 그 뒤 leftover가 961 하나뿐 -> 951~961 로 합치기)
+        if (
+          mergeLast &&
+          result.length > 0 &&
+          chunkEnd - chunkStart + 1 < step
+        ) {
+          // 이전 항목을 빼서 합침
+          const prev = result.pop();
+          const [prevStart, prevEnd] = prev.split('~').map(Number);
+          // 새 구간 chunkStart가 prevEnd+1과 이어지는지 확인
+          // 이어지는 경우 951~960 과 961~961 -> 951~961
+          const mergedRange = `${prevStart}~${chunkEnd}`;
+          result.push(mergedRange);
+        } else {
+          // 일반적인 경우
+          result.push(`${chunkStart}~${chunkEnd}`);
+        }
+        current += step;
+      }
+      return result;
+    }
+
+    /**
+     * @description 접두사(prefix)와 구간 배열을 받아, "prefix_구간.mp3" 꼴의 문자열 배열 반환
+     * @param {string} prefix
+     * @param {string[]} ranges
+     * @returns {string[]}
+     */
+    function generateFileList(prefix, ranges) {
+      return ranges.map(range => `${prefix}_${range}.mp3`);
+    }
+
+    // -----------------------------------
+    // [2] 폴더별 파일 목록 생성
+    // -----------------------------------
+    //  (1) Phonics
+    //      - 1~10씩 총 95구간 => 마지막 구간(941~950) 다음에 leftover(951~961)를 merge
+    const phonicsRanges = makeRanges(1, 961, 10, true); 
+    // => 결과: ["1~10", "11~20", ..., "931~940", "941~961"] (마지막 2개가 merge되어 941~961이 되지 않도록)
+    // 만약 "941~950, 951~961"을 따로 표기하고 싶다면 mergeLast=false, 
+    // 예외 구간 직접 push 식으로도 가능. 아래는 mergeLast=false 후 수동 예외 추가 예:
+    // const raw = makeRanges(1, 950, 10, false); // 1~10 ~ 941~950
+    // raw.push("951~961");
+    // const phonicsRanges = raw;
+    
+    // (2) Rookie(1~20씩 11구간 + 마지막 221~243)
+    //    Rising Star 3(244~927), Rising Star 4(928~1500)
+    //    - step=20, 남은 구간을 마지막에 합침
+    const rookieRanges = makeRanges(1, 220, 20, false); // 1~20 ~ 201~220
+    // 마지막 예외구간 221~243은 직접 추가
+    rookieRanges.push("221~243");
+
+    const risingStar3RangesAll = makeRanges(244, 927, 20, true);
+    // Rising Star 4도 동일
+    const risingStar4RangesAll = makeRanges(928, 1500, 20, true);
+
+    const rookieRisingFiles = [
+      ...generateFileList("Rookie", rookieRanges),
+      ...generateFileList("Rising Star 3", risingStar3RangesAll),
+      ...generateFileList("Rising Star 4", risingStar4RangesAll),
+    ];
+
+    // (3) All-Star 5(1~30씩 15구간=450까지), 마지막 451~480, ...  "총 15개 구간 + 1개 leftover"
+    //     실제로는 1~450까지 30단위면 정확히 15개. 그 뒤 451~... ~ 881, 882~..., 
+    //     MVP 7(1280~1500)
+    //     아래는 대략적인 예시이므로, 실제 범위와 예외를 맞춰서 조정하면 됩니다.
+    // All-Star 5는 1~600까지 30단위(20개) + 601~750(5개) + 751~... 식으로 쪼개기도 하고,
+    // 질문에 주어진 표를 정확히 대응하면, 
+    //  - All-Star 5: 1~30, 31~60, …, 841~870, 871~881 => 15개 + leftover 871~881(11개), 
+    //  - All-Star 6: 882~911, …, 1272~1279(8개 leftover), 
+    //  - MVP 7: 1280~1309, …, 1490~1500 
+    //  아래는 “1~450, leftover 합치기”처럼 대략적인 로직 예시. 필요시 세부 범위를 조절해 주세요.
+    const allStar5Ranges = makeRanges(1, 881, 30, true);  // leftover 머지
+    const allStar6Ranges = makeRanges(882, 1279, 30, true);
+    const mvp7Ranges = makeRanges(1280, 1500, 30, true);
+
+    const allStarMvpFiles = [
+      ...generateFileList("All-Star 5", allStar5Ranges),
+      ...generateFileList("All-Star 6", allStar6Ranges),
+      ...generateFileList("MVP 7", mvp7Ranges),
+    ];
+
+    // (4) 중고등 1~2, 3~4, 5~6, 7~9
+    //  중고등 Level은 step=30, 마지막 leftover(예: 511~538) 같은 예외 구간을 직접 추가
+    //  아래 예시는 질문에 주어진 범위를 최대한 반영하도록 만든 것이며,
+    //  필요하다면 더 세분화해서 mergeLast를 false로 두고 예외 구간만 .push()로 처리해도 됩니다.
+
+    // ---- [중고등 1~2] --------------------------------
+    // Level 1 : 1~510까지 30단위 => leftover 없음
+    const mid12Level1Ranges = makeRanges(1, 510, 30, false);
+    // 예외 구간 511~538 => 직접 추가
+    mid12Level1Ranges.push("511~538");
+
+    // Level 2 : 539~982까지 30단위 => 539~568, 569~598, ... leftover merge
+    const mid12Level2Ranges = makeRanges(539, 982, 30, true);
+    // 마지막 leftover이 혹시 983~1065라면 수동으로 추가
+    // (질문 예시 보니 983~1065가 따로 적혀 있어 push)
+    mid12Level2Ranges.push("983~1065");
+
+    const midLevel1to2 = [
+      ...generateFileList("중고등 Level 1", mid12Level1Ranges),
+      ...generateFileList("중고등 Level 2", mid12Level2Ranges),
+    ];
+
+    // ---- [중고등 3~4] --------------------------------
+    // Level 3 : 1~600까지 30단위 => leftover 없이 601~612 예외구간 수동 push
+    const mid34Level3Ranges = makeRanges(1, 600, 30, false);
+    mid34Level3Ranges.push("601~612");
+
+    // Level 4 : 613~1075까지 30단위 => leftover 없이 1063~1075 부분이 섞임
+    // 여기선 613~1062까지 30단위 + 1063~1075 예외구간 push
+    const mid34Level4Ranges = makeRanges(613, 1062, 30, false);
+    mid34Level4Ranges.push("1063~1075");
+
+    const midLevel3to4 = [
+      ...generateFileList("중고등 Level 3", mid34Level3Ranges),
+      ...generateFileList("중고등 Level 4", mid34Level4Ranges),
+    ];
+
+    // ---- [중고등 5~6] --------------------------------
+    // Level 5 : 1~750까지 30단위, leftover로 751~759, 그 뒤 또 760~800, 801~816 등등
+    // 질문 예시가 매우 세분화되어 있어, 아래는 대표 로직 + 예외로 처리
+    const mid56Level5Ranges = makeRanges(1, 750, 30, false);
+    // leftover들은 질문의 예시대로 하나씩 추가
+    mid56Level5Ranges.push("751~759");
+    mid56Level5Ranges.push("760~789");
+    mid56Level5Ranges.push("790~800");
+    mid56Level5Ranges.push("801~816");
+
+    // Level 6 : 817~... 30단위 + 마지막 1507~1514
+    const mid56Level6Ranges = makeRanges(817, 1506, 30, true);
+    // leftover 예시
+    mid56Level6Ranges.push("1507~1514");
+
+    const midLevel5to6 = [
+      ...generateFileList("중고등 Level 5", mid56Level5Ranges),
+      ...generateFileList("중고등 Level 6", mid56Level6Ranges),
+    ];
+
+    // ---- [중고등 7~9] --------------------------------
+    // Level 7 : 1~810까지 30단위 + leftover "811~824"
+    const mid79Level7Ranges = makeRanges(1, 810, 30, false);
+    mid79Level7Ranges.push("811~824");
+
+    // Level 8 : 825~1473까지 30단위 + leftover "1474~1475"
+    const mid79Level8Ranges = makeRanges(825, 1473, 30, true);
+    mid79Level8Ranges.push("1474~1475");
+
+    // Level 9 : 1476~1835까지 30단위 + leftover "1836~1840"
+    const mid79Level9Ranges = makeRanges(1476, 1835, 30, true);
+    mid79Level9Ranges.push("1836~1840");
+
+    const midLevel7to9 = [
+      ...generateFileList("중고등 Level 7", mid79Level7Ranges),
+      ...generateFileList("중고등 Level 8", mid79Level8Ranges),
+      ...generateFileList("중고등 Level 9", mid79Level9Ranges),
+    ];
+
+    // -----------------------------------
+    // 최종 folderFiles 정리
+    // -----------------------------------
+    const folderFiles = {
+      "Phonics": generateFileList("Phonics", phonicsRanges),
+
+      "Rookie & Rising Star": rookieRisingFiles,
+
+      "All-Star & MVP": allStarMvpFiles,
+
+      "중고등 Level 1~2": midLevel1to2,
+
+      "중고등 Level 3~4": midLevel3to4,
+
+      "중고등 Level 5~6": midLevel5to6,
+
+      "중고등 Level 7~9": midLevel7to9
+    };
+
+    // -----------------------------------
+    // [3] 플레이어 동작부
+    // -----------------------------------
     document.addEventListener('DOMContentLoaded', () => {
-      // 기본 경로
       const baseFolderPath = "https://app.yoons.com/mobile/beflwords/vocanote/";
-
-      // 폴더별 mp3 파일 생성 편의 함수
-      const generateFileList = (prefix, ranges) =>
-        ranges.map((range) => `${prefix}_${range}.mp3`);
-
-      // 폴더별 파일 목록
-      const folderFiles = {
-        "Phonics": generateFileList("Phonics", Array.from({ length: 96 }, (_, i) => {
-          const start = i * 10 + 1;
-          const end = (i + 1) * 10;
-          return `${start}~${end}`;
-        })),
-
-        "Rookie & Rising Star": [
-          // Rookie
-          ...generateFileList("Rookie", Array.from({ length: 12 }, (_, i) => {
-            const start = i * 20 + 1;
-            const end = (i + 1) * 20;
-            return `${start}~${end}`;
-          })),
-          // Rising Star 3
-          ...generateFileList("Rising Star 3", Array.from({ length: 16 }, (_, i) => {
-            const start = 244 + i * 20;
-            const end = 263 + i * 20;
-            return `${start}~${end}`;
-          })),
-          // Rising Star 4
-          ...generateFileList("Rising Star 4", Array.from({ length: 16 }, (_, i) => {
-            const start = 928 + i * 20;
-            const end = 947 + i * 20;
-            return `${start}~${end}`;
-          })),
-        ],
-
-        "All-Star & MVP": [
-          // All-Star 5
-          ...generateFileList("All-Star 5", Array.from({ length: 15 }, (_, i) => {
-            const start = i * 30 + 1;
-            const end = (i + 1) * 30;
-            return `${start}~${end}`;
-          })),
-          // All-Star 6
-          ...generateFileList("All-Star 6", Array.from({ length: 9 }, (_, i) => {
-            const start = 882 + i * 30;
-            const end = 911 + i * 30;
-            return `${start}~${end}`;
-          })),
-          // MVP 7
-          ...generateFileList("MVP 7", Array.from({ length: 8 }, (_, i) => {
-            const start = 1280 + i * 30;
-            const end = 1309 + i * 30;
-            return `${start}~${end}`;
-          })),
-        ],
-
-        "중고등 Level 1~2": [
-          // Level 1
-          ...generateFileList("중고등 Level 1", Array.from({ length: 17 }, (_, i) => {
-            const start = i * 30 + 1;
-            const end = (i + 1) * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 1", ["511~538"]),
-          // Level 2
-          ...generateFileList("중고등 Level 2", Array.from({ length: 8 }, (_, i) => {
-            const start = 539 + i * 30;
-            const end = 568 + i * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 2", ["983~1065"]),
-        ],
-
-        "중고등 Level 3~4": [
-          // Level 3
-          ...generateFileList("중고등 Level 3", Array.from({ length: 20 }, (_, i) => {
-            const start = i * 30 + 1;
-            const end = (i + 1) * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 3", ["601~612"]),
-          // Level 4
-          ...generateFileList("중고등 Level 4", Array.from({ length: 16 }, (_, i) => {
-            const start = 613 + i * 30;
-            const end = 642 + i * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 4", ["1063~1075"]),
-        ],
-
-        "중고등 Level 5~6": [
-          // Level 5
-          ...generateFileList("중고등 Level 5", Array.from({ length: 22 }, (_, i) => {
-            const start = i * 30 + 1;
-            const end = (i + 1) * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 5", ["751~759"]),
-          // Level 6
-          ...generateFileList("중고등 Level 6", Array.from({ length: 16 }, (_, i) => {
-            const start = 817 + i * 30;
-            const end = 846 + i * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 6", ["1507~1514"]),
-        ],
-
-        "중고등 Level 7~9": [
-          // Level 7
-          ...generateFileList("중고등 Level 7", Array.from({ length: 27 }, (_, i) => {
-            const start = i * 30 + 1;
-            const end = (i + 1) * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 7", ["811~824"]),
-          // Level 8
-          ...generateFileList("중고등 Level 8", Array.from({ length: 16 }, (_, i) => {
-            const start = 825 + i * 30;
-            const end = 854 + i * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 8", ["1474~1475"]),
-          // Level 9
-          ...generateFileList("중고등 Level 9", Array.from({ length: 9 }, (_, i) => {
-            const start = 1476 + i * 30;
-            const end = 1505 + i * 30;
-            return `${start}~${end}`;
-          })),
-          ...generateFileList("중고등 Level 9", ["1836~1840"]),
-        ],
-      };
-
-      // HTML 요소 캐싱
       const folderSelect = document.getElementById("folderSelect");
       const audioPlayer = document.getElementById("audioPlayer");
       const currentTrackLabel = document.getElementById("currentTrack");
       const audioList = document.getElementById("audioList");
       const playlistContainer = document.querySelector(".playlist");
 
-      let currentFolder = "Phonics";
+      let currentFolder = folderSelect.value;
       let audioFiles = [];
       let currentIndex = 0;
 
-      /**
-       * 플레이리스트 UI 업데이트
-       */
       const updatePlaylistView = () => {
         audioList.innerHTML = "";
         audioFiles.forEach((file, i) => {
@@ -327,9 +312,6 @@
         });
       };
 
-      /**
-       * 특정 트랙 재생
-       */
       const playTrack = (index) => {
         if (index >= 0 && index < audioFiles.length) {
           currentIndex = index;
@@ -339,75 +321,49 @@
           updatePlaylistView();
           audioPlayer.play();
 
-          // ★ 현재 활성화된 li를 플레이리스트에서 세 번째 줄에 맞추기 위한 스크롤 조정
+          // 재생 리스트 스크롤 위치 조정(재생 항목이 리스트에서 위로 좀 더 오도록)
           const liElement = audioList.children[currentIndex];
           if (liElement) {
             const liRect = liElement.getBoundingClientRect();
             const containerRect = playlistContainer.getBoundingClientRect();
-
-            // li가 현재 화면에서 어디에 있는지(상단 거리)
             const liOffsetFromContainerTop = liRect.top - containerRect.top;
-
-            // li 하나의 높이를 구함
             const liHeight = liElement.offsetHeight;
-
-            // 'liOffsetFromContainerTop'은 현재 liElement가 컨테이너 내부에서
-            // 얼마나 아래에 있는지 표시. 여기에 (liHeight * 2)를 빼주면
-            // 현재 li가 컨테이너 상단에서 2칸(= 세 번째 줄) 내려간 위치가 됨.
-            //
-            // scrollTop은 지금까지 스크롤된 양이므로,
-            // 새 스크롤값 = 현재 스크롤 + ( li의 상대위치 - 2 * liHeight ).
-            const desiredScrollTop = 
-              playlistContainer.scrollTop + (liOffsetFromContainerTop - 2 * liHeight);
-
-            // 0보다 작아지면 그냥 0으로 처리(플레이리스트 최상단)
-playlistContainer.scrollTo({
-  top: Math.max(desiredScrollTop, 0),
-  behavior: 'smooth'
-});
-
+            const desiredScrollTop = playlistContainer.scrollTop + (liOffsetFromContainerTop - 2 * liHeight);
+            playlistContainer.scrollTo({
+              top: Math.max(desiredScrollTop, 0),
+              behavior: 'smooth'
+            });
           }
         }
       };
 
-      /**
-       * 다음 트랙 재생
-       */
       const playNextTrack = () => {
         if (currentIndex + 1 < audioFiles.length) {
           playTrack(currentIndex + 1);
         }
       };
 
-      /**
-       * 폴더 변경 시 오디오 리스트 업데이트
-       */
       const changeFolder = () => {
         currentFolder = folderSelect.value;
         audioFiles = folderFiles[currentFolder] || [];
         currentIndex = 0;
         updatePlaylistView();
+        currentTrackLabel.textContent = `현재 재생 중: 없음`;
+        audioPlayer.src = "";
       };
 
-      /**
-       * 이벤트 리스너 등록
-       */
       const initEventListeners = () => {
         audioPlayer.addEventListener("ended", playNextTrack);
         folderSelect.addEventListener("change", changeFolder);
       };
 
-      /**
-       * 초기화
-       */
       const init = () => {
         initEventListeners();
-        // 첫 로드 시 기본 폴더로 설정
-        changeFolder();
+        changeFolder(); // 기본 폴더로 초기 세팅
       };
 
-      // 모든 초기화 실행
       init();
+      console.log("[DEBUG] folderFiles", folderFiles);
     });
   </script>
 </body>
